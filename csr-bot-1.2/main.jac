@@ -5,7 +5,13 @@ walker init {
     
     root {
         spawn here --> graph::main_graph;
-        spawn --> walker::talker;
+        //spawn --> walker::talker;
+        take -->;
+    }
+
+    state, input_state{
+        report here;
+        take -->;
     }
 
 }
