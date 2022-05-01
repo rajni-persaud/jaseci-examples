@@ -11,30 +11,35 @@ walker talker {
 
         } else {
         
-            q_enc = use.enc_question(utterance);
-            a_enc = use.enc_answer(here.prompts); # can take lists or single strings
-            
-            qa_scores = {}; #stores a map of question-answer scores
-            cf_threshold = 0.2; #scores below will be discarded
-            cf_max = 0; #stores the highest score
-            chosen_intent = ""; #the prompt with the highest score
+            state {
+                q_enc = use.enc_question(utterance);
+                a_enc = use.enc_answer(here.prompts); # can take lists or single strings
+                
+                qa_scores = {}; #stores a map of question-answer scores
+                cf_threshold = 0.2; #scores below will be discarded
+                cf_max = 0; #stores the highest score
+                chosen_intent = ""; #the prompt with the highest score
 
-            for i=0 to i<(here.prompts).length by i += 1 {
+                for i=0 to i<(here.prompts).length by i += 1 {
 
-                cf = vector.cosine_sim(q_enc, a_enc[i]);
+                    cf = vector.cosine_sim(q_enc, a_enc[i]);
 
-                qa_scores[here.prompts[i]] = cf;
+                    qa_scores[here.prompts[i]] = cf;
 
-                if( cf > cf_max && cf >= cf_threshold ) {
-                    cf_max = cf;
-                    chosen_intent = here.prompts[i];
+                    if( cf > cf_max && cf >= cf_threshold ) {
+                        cf_max = cf;
+                        chosen_intent = here.prompts[i];
+                    }
                 }
+
+                response = -[transition(intent == chosen_intent)]->;
             }
 
-            input_state: here.input = utterance;
+            input_state {
+                here.input = utterance;
+                response = --> node::closing_state;
+            }
 
-
-            response = -[transition(intent == chosen_intent)]->;
             nodeobj = {};
             message = "";
 
@@ -54,7 +59,7 @@ walker talker {
     }
 
     closing_state {
-        report {"message": here.message};
+        disengage;
     }
 
     root {
