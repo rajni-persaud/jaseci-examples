@@ -14,6 +14,7 @@ Enter password (twice)
 jsctl
 login http://localhost:8000
 enter username and password of superuser created above.
+If login successful, a token should be generated, copy the token.
 
 WSL T3:
 jsctl jac build main.jac
@@ -22,16 +23,6 @@ WSL T2:
 sentinel register -name main -mode ir main.jir
 alias list
 copy the sentinel id
-
-you need to grab a token
-Go  to localhost:8000/user/token
-In content,
-{
-    "email":"[superuser_email]",
-    "password":"[superuser_password]"
-}
-click POST
-A token should be generated, copy the token.
 
 In postman
 Create a new request:
