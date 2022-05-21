@@ -13,7 +13,7 @@ walker create_log {
     logs {
         
         if(!subject || !body) {
-            report.status = 400;
+            report:status = 400;
             report "Missing required parameters";
             disengage;
         } 
@@ -48,12 +48,13 @@ walker update_log {
     has id;
     has timestamp;
     has subject;
-    has body; 
+    has body;
+    has tags; 
 
     #head straight to operating context in app graph, if not there
     root: take -->[0];
     app_root: take --> node::logs;
-    logs: take -[logs_log(id == id)]-> node::log else: report.status = 404;
+    logs: take -[logs_log(id == id)]-> node::log else: report:status = 404;
 
     log {
         
@@ -83,7 +84,7 @@ walker delete_log {
     #head straight to operating context in app graph, if not there
     root: take -->[0];
     app_root: take --> node::logs;
-    logs: take -[logs_log(id == id)]-> node::log else: report.status = 404;
+    logs: take -[logs_log(id == id)]-> node::log else: report:status = 404;
 
     log {
         report here;
@@ -100,7 +101,7 @@ walker get_log {
     #head straight to operating context in app graph
     root: take -->[0];
     app_root: take --> node::logs;
-    logs: take -[logs_log(id == id)]-> node::log else: report.status = 404;
+    logs: take -[logs_log(id == id)]-> node::log else: report:status = 404;
 
     log {
         report here;

@@ -9,7 +9,7 @@ walker create_tag {
     tags {
         #check required params
         if(!label) {
-            report.status = 400;
+            report:status = 400;
             report "Missing required parameters";
             disengage;
         } 
@@ -31,7 +31,7 @@ walker update_tag {
     #head straight to operating context in app graph, if not there
     root: take -->[0];
     app_root: take --> node::tags;
-    tags: take -[tags_tag(id == id)]-> node::tag else: report.status = 404;
+    tags: take -[tags_tag(id == id)]-> node::tag else: report:status = 404;
 
     tag {
         if(label): here.label = label;
@@ -48,7 +48,7 @@ walker delete_tag {
     #head straight to operating context in app graph, if not there
     root: take -->[0];
     app_root: take --> node::tags;
-    tags: take -[tags_tag(id == id)]-> node::tag else: report.status = 404;
+    tags: take -[tags_tag(id == id)]-> node::tag else: report:status = 404;
 
     tag {
         report here;
@@ -65,7 +65,7 @@ walker get_tag {
     #head straight to operating context in app graph
     root: take -->[0];
     app_root: take --> node::tags;
-    tags: take -[tags_tag(id == id)]-> node::tag else: report.status = 404;
+    tags: take -[tags_tag(id == id)]-> node::tag else: report:status = 404;
 
     tag {
         report here; 
