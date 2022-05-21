@@ -9,7 +9,7 @@ walker create_user {
 
     users {
         #check required params
-        if(!email) {
+        if(!email && !password) {
             report:status = 400;
             report "Missing required parameters";
             disengage;
@@ -17,10 +17,17 @@ walker create_user {
 
         account = jaseci.master_create(email, true, {'password': password, 'name': email, 'is_activated': true});
 
-        nd = spawn node::user(id = account.info['jid'], email = email);
+        if(account.jid) {
 
-        here -[users_user(id = nd.info['jid'])]-> nd;
-        report nd; #returns the node;   
+            user_id = account['jid'];
+
+            nd = spawn here -[ users_user(id = user_id) ] -> node::user(id = user_id, email = email);
+            report nd; #returns the node;  
+            
+        } else {
+            report account;
+        }
+         
         disengage;
     }
 

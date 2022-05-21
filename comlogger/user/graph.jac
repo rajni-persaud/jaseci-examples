@@ -7,3 +7,7 @@ node user {
     has headline;
     has bio;
 }
+
+edge users_user {
+    has id;
+}
