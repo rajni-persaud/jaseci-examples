@@ -1,28 +1,8 @@
+import {*} with "./log/graph.jac";
+import {*} with "./user/graph.jac";
+import {*} with "./tag/graph.jac";
+
 node app_root;
-
-node users;
-node user {
-    has name;
-    has email;
-    has headline;
-    has bio;
-}
-
-node logs;
-node log_entry {
-    has timestamp;
-    has subject;
-    has body;
-}
-
-edge log_link {
-    has id;
-}
-
-node tags;
-node tag {
-    has label;
-}
 
 graph app_graph {
 
@@ -30,8 +10,8 @@ graph app_graph {
 
     spawn {
         app_root = spawn node::app_root;
-        users = spawn app_root --> node::users;
         logs = spawn app_root --> node::logs;
+        users = spawn app_root --> node::users;
         tags = spawn app_root --> node::tags;
     }
 
